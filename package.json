@@ -1,0 +1,27 @@
+{
+  "name": "@hexlet/code",
+  "version": "1.0.0",
+  "description": "Chat (Slack)",
+  "homepage": "https://github.com/max-barbaris/frontend-project-12#readme",
+  "bugs": {
+    "url": "https://github.com/max-barbaris/frontend-project-12/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/max-barbaris/frontend-project-12.git"
+  },
+  "license": "ISC",
+  "author": "Maksim Rastoskuev",
+  "type": "commonjs",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx start-server -s ./frontend/dist",
+    "build": "npm run build --prefix frontend",
+    "postinstal": "cd frontend && npm ci"
+  },
+  "dependencies": {
+    "@hexlet/chat-server": "^2.0.4",
+    "fast-jwt": "^6.0.2"
+  }
+}
