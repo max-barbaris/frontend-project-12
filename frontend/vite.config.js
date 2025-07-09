@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react'; // Официальный плагин
 export default defineConfig({
   plugins: [react()], // Подключает React плагин для Vite
   server: {
-    port: 5002,
+    port: 5001,
     proxy: {
       // Проксируем запросы к API
       '/api': {
