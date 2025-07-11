@@ -1,4 +1,5 @@
 import React from 'react';
+import { Form, Button, Container, Col, Row } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 
@@ -18,13 +19,13 @@ const LoginPage = () => {
   });
 
   return (
-    <div className="container-fluid h-100">
-      <div className="row justify-content-center align-content-center h-100">
-        <div className="col-12 col-md-8 col-xxl-6">
-          <form className="login-form col-12 col-md-6 mt-3 mt-md-0" onSubmit={formik.handleSubmit}>
+    <Container className="container-fluid h-100">
+      <Row className="row justify-content-center align-content-center h-100">
+        <Col className="col-12 col-md-8 col-xxl-6">
+          <Form className="login-form col-12 col-md-6 mt-3 mt-md-0" onSubmit={formik.handleSubmit}>
             <h1 className="text-center mb-4">Войти</h1>
-            <div className="form-floating mb-3">
-              <input
+            <Form.Group className="form-floating mb-3">
+              <Form.Control
                 type="text"
                 className="form-control"
                 id="username"
@@ -35,11 +36,11 @@ const LoginPage = () => {
                 autoComplete="username"
                 required
               />
-              <label htmlFor="username">Ваш ник</label>
-            </div>
+              <Form.Label htmlFor="username">Ваш ник</Form.Label>
+            </Form.Group>
 
-            <div className="form-floating mb-4">
-              <input
+            <Form.Group className="form-floating mb-4">
+              <Form.Control
                 type="password"
                 className="form-control"
                 id="password"
@@ -50,19 +51,19 @@ const LoginPage = () => {
                 autoComplete="current-password"
                 required
               />
-              <label htmlFor="password">Пароль</label>
-            </div>
+              <Form.Label htmlFor="password">Пароль</Form.Label>
+            </Form.Group>
 
-            <button 
+            <Button 
               type="submit" 
               className="w-100 mb-3 btn btn-outline-primary"
             >
               Войти
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
+            </Button>
+          </Form>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 
