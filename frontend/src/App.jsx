@@ -1,16 +1,19 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import LoginPage from './Components/Login';
-import MainPage from './Components/Main';
-import NotFoundPage from './Components/NotFoundPage';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import LoginPage from './components/Login';
+import MainPage from './components/Main';
+import NotFoundPage from './components/NotFoundPage';
+import { useAuth } from './context/AuthProvider';
 
 function App() {
+  const { user } = useAuth();
+
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<MainPage />}></Route>
-        <Route path='/login' element={<LoginPage />}></Route>
-        <Route path='*' element={<NotFoundPage />}></Route>
+        <Route path='/' element={user ? <MainPage /> : <Navigate to="/login" replace />} />
+        <Route path='/login' element={!user ? <LoginPage /> : <Navigate to="/" replace />} />
+        <Route path='*' element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   );
