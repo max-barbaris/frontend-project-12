@@ -1,5 +1,5 @@
-import { defineConfig } from 'vite'; // Функция типобезопасной настройки Vite
-import react from '@vitejs/plugin-react'; // Официальный плагин для поддержки React.
+import { defineConfig } from 'vite' // Функция типобезопасной настройки Vite
+import react from '@vitejs/plugin-react' // Официальный плагин для поддержки React.
 
 export default defineConfig({
   plugins: [react()], // Подключает React плагин для Vite
@@ -18,4 +18,4 @@ export default defineConfig({
       },
     },
   },
-});
+})

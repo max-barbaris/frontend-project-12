@@ -1,22 +1,23 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import LoginPage from './components/Login';
-import MainPage from './components/Main';
-import NotFoundPage from './components/NotFoundPage';
-import { useAuth } from './context/AuthProvider';
+import React from 'react'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import LoginPage from './pages/Login'
+import MainPage from './pages/Main'
+import NotFoundPage from './pages/NotFoundPage'
+import { useSelector } from 'react-redux'
+import { selectIsAuth } from './features/auth/authSlice'
 
 function App() {
-  const { user } = useAuth();
+  const isAuth = useSelector(selectIsAuth)
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={user ? <MainPage /> : <Navigate to="/login" replace />} />
-        <Route path='/login' element={!user ? <LoginPage /> : <Navigate to="/" replace />} />
-        <Route path='*' element={<NotFoundPage />} />
+        <Route path="/" element={isAuth ? <MainPage /> : <Navigate to="/login" replace />} />
+        <Route path="/login" element={!isAuth ? <LoginPage /> : <Navigate to="/" replace />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
-  );
+  )
 };
 
-export default App;
+export default App

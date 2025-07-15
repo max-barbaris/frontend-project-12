@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 const NotFoundPage = () => (
   <div className="text-center">
@@ -8,6 +8,6 @@ const NotFoundPage = () => (
       <a href="/">На главную страницу</a>
     </p>
   </div>
-);
+)
 
-export default NotFoundPage;
+export default NotFoundPage
