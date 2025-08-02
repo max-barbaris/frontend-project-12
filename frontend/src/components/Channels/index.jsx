@@ -1,9 +1,9 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setCurrentChannel, selectCurrentChannelId } from '../features/channels/channelsSLice'
+import { setCurrentChannel, selectCurrentChannelId } from '../../features/channels/channelsSlice'
 import { Col, Button } from 'react-bootstrap'
 import { PlusSquare } from 'react-bootstrap-icons'
-import { useGetChannels } from '../features/channels/channelsApi'
+import { useGetChannels } from '../../features/channels/channelsApi'
 import Channel from './Channel'
 
 const Channels = () => {
