@@ -6,7 +6,7 @@ import { useFormik } from 'formik'
 import * as yup from 'yup'
 import { selectUser } from '../../features/auth/authSlice'
 import { selectCurrentChannel } from '../../features/channels/channelsApi'
-import { useAddMessage } from '../../features/messages/messagesApi'
+import { useAddMessage, useGetMessages } from '../../features/messages/messagesApi'
 
 const initialValues = {
   body: '',
@@ -17,6 +17,7 @@ const validationSchema = yup.object().shape({
 })
 const MessageForm = () => {
   const [addMessage] = useAddMessage()
+  const { refetch } = useGetMessages()
   const username = useSelector(selectUser)
   const channel = useSelector(selectCurrentChannel)
   const inputRef = useRef(null)
@@ -38,7 +39,8 @@ const MessageForm = () => {
         channelId: channel.id,
         username,
       }
-      await addMessage(message)
+      await addMessage(message).unwrap()
+      await refetch()
       formik.resetForm()
       formik.setSubmitting(false) // Снимаем состояние "отправки"
       inputRef.current.focus()
