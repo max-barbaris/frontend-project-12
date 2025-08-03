@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import LoginPage from './pages/Login'
 import MainPage from './pages/Main'
 import NotFoundPage from './pages/NotFoundPage'
@@ -11,14 +11,14 @@ function App() {
   const isAuth = useSelector(selectIsAuth)
 
   return (
-    <BrowserRouter>
+    <>
       <Header />
       <Routes>
         <Route path="/" element={isAuth ? <MainPage /> : <Navigate to="/login" replace />} />
         <Route path="/login" element={!isAuth ? <LoginPage /> : <Navigate to="/" replace />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
-    </BrowserRouter>
+    </>
   )
 };
 

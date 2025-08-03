@@ -4,23 +4,68 @@ import { setCurrentChannel, selectCurrentChannelId } from '../../features/channe
 import { Col, Button } from 'react-bootstrap'
 import { PlusSquare } from 'react-bootstrap-icons'
 import { useGetChannels } from '../../features/channels/channelsApi'
+import { useModal } from '../common/Modal/ModalContext'
 import Channel from './Channel'
+import AddForm from './AddForm'
+import RenameForm from './RenameForm'
+import DeleteForm from './DeleteForm'
 
 const Channels = () => {
+  const { openModal } = useModal()
   const dispatch = useDispatch()
   const { data: channels = [] } = useGetChannels()
   const currentChannelId = useSelector(selectCurrentChannelId)
+
   const handleSelect = channel => () => {
     dispatch(setCurrentChannel(channel))
+  }
+
+  const handleAdd = () => {
+    const config = {
+      header: {
+        title: 'Добавить канал',
+      },
+      body: {
+        component: AddForm,
+      },
+    }
+    openModal(config)
+  }
+
+  const handleDelete = channel => () => {
+    const config = {
+      header: {
+        title: 'Удалить канал',
+      },
+      body: {
+        component: DeleteForm,
+        modalProps: { channel },
+      },
+    }
+    openModal(config)
+  }
+
+  const handleRename = channel => () => {
+    const config = {
+      header: {
+        title: 'Переименовать канал',
+      },
+      body: {
+        component: RenameForm,
+        modalProps: { channel },
+      },
+    }
+    openModal(config)
   }
 
   return (
     <Col xs={4} md={2} className="border-end px-0 bg-light flex-column h-100 d-flex">
       <div className="d-flex mt-1 justify-content-between mb-2 ps-4 pe-2 p-4">
-        <b>Каналы</b>
+        <p className="fw-bold mb-0">Каналы</p>
         <Button
-          variant="link"
-          className="p-0 text-primary btn-group-vertical"
+          onClick={handleAdd}
+          variant="group-vertical"
+          className="p-0 text-primary"
         >
           <PlusSquare size={20} />
           <span className="visually-hidden">+</span>
@@ -34,6 +79,8 @@ const Channels = () => {
             channel={channel}
             isCurrent={channel.id === currentChannelId}
             handleSelect={handleSelect(channel)}
+            handleDelete={handleDelete(channel)}
+            handleRename={handleRename(channel)}
           />
         ))}
       </ul>

@@ -16,8 +16,29 @@ const channelsApi = createApi({
       return headers
     },
   }),
-  tagTypes: ['Channels'],
+  tagTypes: ['Channels', 'Messages'],
   endpoints: builder => ({
+    addChannel: builder.mutation({
+      query: channel => ({
+        method: 'POST',
+        body: channel,
+      }),
+    }),
+    deleteChannel: builder.mutation({
+      query: ({ id }) => ({
+        url: id,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Messages', 'Channels'],
+      transformResponse: response => ({ ...response }),
+    }),
+    updateChannel: builder.mutation({
+      query: ({ id, ...body }) => ({
+        url: id,
+        method: 'PATCH',
+        body,
+      }),
+    }),
     getChannels: builder.query({
       query: () => '',
       providesTags: ['Channels'],
@@ -32,12 +53,20 @@ const selectChannelsData = createSelector(
   channelsState => channelsState.data ?? [],
 )
 
+export const selectChannelsNames = createSelector(
+  selectChannelsData,
+  channels => channels.map(({ name }) => name),
+)
+
 export const selectCurrentChannel = createSelector(
   [selectChannelsData, selectCurrentChannelId],
   (channels, currentChannelId) => channels.find(channel => channel.id === currentChannelId) || null,
 )
 
 export const {
+  useAddChannelMutation: useAddChannel,
+  useDeleteChannelMutation: useDeleteChannel,
+  useUpdateChannelMutation: useUpdateChannel,
   useGetChannelsQuery: useGetChannels,
 } = channelsApi
 
