@@ -1,7 +1,7 @@
 import React from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import LoginPage from './pages/Login'
-import Signup from './components/Auth/SignUp.jsx'
+import Signup from './pages/SignUp.jsx'
 import MainPage from './pages/Main'
 import NotFoundPage from './pages/NotFoundPage'
 import { useSelector } from 'react-redux'
