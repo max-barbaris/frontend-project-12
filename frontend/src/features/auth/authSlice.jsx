@@ -70,6 +70,29 @@ const authSlice = createSlice({
         Object.assign(state, newState)
       },
     )
+    builder.addMatcher(
+      authApi.endpoints.signup.matchFulfilled,
+      (state, { payload }) => {
+        const newState = {
+          ...initialState,
+          token: payload.token,
+          username: payload.username,
+        }
+        Object.assign(state, newState)
+        localStorage.setItem('hexletchat', JSON.stringify(payload))
+      },
+    )
+    builder.addMatcher(
+      authApi.endpoints.signup.matchRejected,
+      (state, { payload }) => {
+        const newState = {
+          ...initialState,
+          isError: true,
+          error: payload?.data?.message ?? 'unknown',
+        }
+        Object.assign(state, newState)
+      },
+    )
   },
 })
 
