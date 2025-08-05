@@ -20,7 +20,7 @@ import {
 } from '../features/auth/constants'
 import { signupValidationSchema as validationSchema } from '../features/auth/validation'
 
-import { PAGES } from '../navigation/routes'
+import { PAGES } from '../navigation/pageRoutes'
 
 const Signup = () => {
   const { t } = useTranslation()

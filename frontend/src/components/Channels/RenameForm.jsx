@@ -5,6 +5,7 @@ import { Button, Form } from 'react-bootstrap'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
+import leoProfanity from 'leo-profanity'
 
 import LoadingButton from '../Button/LoadingButton'
 
@@ -31,8 +32,11 @@ export const RenameForm = ({ handleClose, channel }) => {
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: async (formData) => {
+      const schema = getValidationSchema(filteredChannelsNames)
+      const newChannelData = { [FIELD_NAME]: leoProfanity.clean(formData[FIELD_NAME]) }
+      await schema.validate(newChannelData)
       await renameChannel({
-        ...formData,
+        ...schema.cast(newChannelData),
         id: channel.id,
       })
       toast.success(t(`channels.channelRenamedSuccessfully`))

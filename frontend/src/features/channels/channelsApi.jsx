@@ -1,11 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { createSelector } from '@reduxjs/toolkit'
 import { selectCurrentChannelId } from '../ui/uiSelectors'
+import ROUTES from '../../navigation/apiRoutes'
 
 const channelsApi = createApi({
   reducerPath: 'channelsApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'api/v1/channels',
+    baseUrl: ROUTES.CHANNELS,
     prepareHeaders: (headers, { getState }) => {
       const token = getState().auth.token
 

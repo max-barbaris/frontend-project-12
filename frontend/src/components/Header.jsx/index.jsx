@@ -5,7 +5,7 @@ import { Button, Container, Navbar } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 
 import { selectIsAuth, clearAuth } from '../../features/auth/authSlice'
-import { PAGES } from '../../navigation/routes'
+import { PAGES } from '../../navigation/pageRoutes'
 
 const Header = () => {
   const { t } = useTranslation()

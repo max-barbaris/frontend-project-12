@@ -5,6 +5,7 @@ import { useFormik } from 'formik'
 import { Button, Form } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
+import leoProfanity from 'leo-profanity'
 
 import LoadingButton from '../Button/LoadingButton'
 
@@ -28,7 +29,10 @@ export const AddForm = ({ handleClose }) => {
     validateOnBlur: false,
     validateOnChange: false,
     onSubmit: async (formData) => {
-      await addChannel(formData)
+      const schema = getValidationSchema(channelsNames)
+      const channel = { [FIELD_NAME]: leoProfanity.clean(formData[FIELD_NAME]) }
+      await schema.validate(channel)
+      await addChannel(schema.cast(channel))
       toast.success(t('channels.channelAddedSuccessfully'))
       handleClose()
     },

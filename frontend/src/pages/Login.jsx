@@ -18,7 +18,7 @@ import AuthForm from '../components/Auth/AuthForm'
 import loginImg from '../assets/login.jpg'
 import LoadingButton from '../components/Button/LoadingButton'
 
-import { PAGES } from '../navigation/routes'
+import { PAGES } from '../navigation/pageRoutes'
 
 const LoginPage = () => {
   const { t } = useTranslation()

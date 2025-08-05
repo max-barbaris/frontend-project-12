@@ -4,6 +4,7 @@ import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
 import i18next from 'i18next'
 import { I18nextProvider, initReactI18next } from 'react-i18next'
+import leoProfanity from 'leo-profanity'
 
 import resources from './locales/index'
 import store from './app/store'
@@ -18,6 +19,8 @@ import BaseModal from './components/common/Modal'
 
 const init = async () => {
   const socket = io()
+
+  leoProfanity.loadDictionary('ru')
 
   const i18n = i18next.createInstance()
   await i18n.use(initReactI18next).init({

@@ -1,7 +1,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { PAGES } from '../navigation/routes'
+import { PAGES } from '../navigation/pageRoutes'
 import notfoundImg from '../assets/notfound.svg'
 
 const NotFoundPage = () => {

@@ -4,12 +4,12 @@ import { ToastContainer } from 'react-toastify'
 import { useSelector } from 'react-redux'
 
 import Header from './components/Header.jsx'
-import LoginPage from './pages/Login'
+import LoginPage from './pages/Login.jsx'
 import Signup from './pages/SignUp.jsx'
-import MainPage from './pages/Main'
-import NotFoundPage from './pages/NotFoundPage'
+import MainPage from './pages/Main.jsx'
+import NotFoundPage from './pages/NotFoundPage.jsx'
 import { selectIsAuth } from './features/auth/authSlice'
-import { PAGES } from './navigation/routes.jsx'
+import { PAGES } from './navigation/pageRoutes'
 
 const App = () => {
   const isAuth = useSelector(selectIsAuth)

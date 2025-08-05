@@ -4,6 +4,7 @@ import { useFormik } from 'formik'
 import { Form, InputGroup, Button } from 'react-bootstrap'
 import { ArrowRightSquare } from 'react-bootstrap-icons'
 import { useTranslation } from 'react-i18next'
+import leoProfanity from 'leo-profanity'
 
 import { selectUser } from '../../features/auth/authSlice'
 import { selectCurrentChannel } from '../../features/channels/channelsApi'
@@ -13,7 +14,7 @@ import { validationSchema } from '../../features/messages/validation'
 
 const MessageForm = () => {
   const { t } = useTranslation()
-  const [addMessage] = useAddMessage()
+  const [addMessage, { isSubmitting }] = useAddMessage()
   const { refetch } = useGetMessages()
   const username = useSelector(selectUser)
   const channel = useSelector(selectCurrentChannel)
@@ -23,7 +24,7 @@ const MessageForm = () => {
     if (inputRef.current) {
       inputRef.current.focus()
     }
-  }, [channel])
+  }, [channel, isSubmitting])
 
   const formik = useFormik({
     initialValues,
@@ -31,11 +32,11 @@ const MessageForm = () => {
     validateOnBlur: false,
     onSubmit: async (formData, { resetForm }) => {
       const message = {
-        body: formData.body,
+        body: leoProfanity.clean(formData[FIELD_MESSAGE]),
         channelId: channel.id,
         username,
       }
-      await addMessage(message).unwrap()
+      await addMessage(message)
       await refetch()
       resetForm()
       inputRef.current.focus()
