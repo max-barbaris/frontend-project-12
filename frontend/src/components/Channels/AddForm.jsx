@@ -1,23 +1,19 @@
 import React, { useRef, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
 import { useFormik } from 'formik'
 import { Button, Form } from 'react-bootstrap'
-import { selectChannelsNames, useAddChannel } from '../../features/channels/channelsApi'
-import * as yup from 'yup'
-import PropTypes from 'prop-types'
+import { useTranslation } from 'react-i18next'
 
-const initialValues = {
-  name: '',
-}
+import { selectChannelsNames, useAddChannel } from '../../features/channels/channelsApi'
+import { initialValues, FIELD_NAME } from '../../features/channels/constants'
+import { getValidationSchema } from '../../features/channels/validation'
 
 export const AddForm = ({ handleClose }) => {
+  const { t } = useTranslation()
   const channelsNames = useSelector(selectChannelsNames)
   const inputRef = useRef(null)
   const [addChannel] = useAddChannel()
-
-  const validationSchema = yup.object().shape({
-    name: yup.string().trim().required().min(3).max(20).notOneOf(channelsNames),
-  })
 
   useEffect(() => {
     inputRef.current.focus()
@@ -25,15 +21,18 @@ export const AddForm = ({ handleClose }) => {
 
   const formik = useFormik({
     initialValues,
-    validationSchema,
+    validationSchema: getValidationSchema(channelsNames),
     onSubmit: async (formData) => {
       await addChannel(formData)
       handleClose()
     },
   })
 
-  const nameError = (formik.dirty && formik.errors.name) || formik.status
-  const isSubmitDisabled = !formik.dirty || nameError || formik.isSubmitting
+  const allErrors = {
+    ...formik.errors,
+    ...(formik.status && { [FIELD_NAME]: formik.status }),
+  }
+  const isSubmitDisabled = !formik.dirty || formik.isSubmitting
 
   return (
     <Form onSubmit={formik.handleSubmit}>
@@ -44,28 +43,31 @@ export const AddForm = ({ handleClose }) => {
           ref={inputRef}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          values={formik.values.name}
-          name="name"
-          id="name"
-          isInvalid={nameError}
+          value={formik.values[FIELD_NAME]}
+          name={FIELD_NAME}
+          id={FIELD_NAME}
+          isInvalid={allErrors[FIELD_NAME]}
         />
-        <label className="visually-hidden" htmlFor="name">
-          Название канала
+        <label className="visually-hidden" htmlFor={FIELD_NAME}>
+          {t('global.channelName')}
         </label>
-        <Form.Control.Feedback type="invalid">
-          {nameError}
-        </Form.Control.Feedback>
+        {formik.touched[FIELD_NAME] && allErrors[FIELD_NAME] && (
+          <Form.Control.Feedback type="invalid">
+            {t(`channels.addForm.error.${allErrors[FIELD_NAME]}`)}
+          </Form.Control.Feedback>
+        )}
         <div className="d-flex justify-content-end">
           <Button
             className="me-2"
             variant="secondary"
             type="button"
             onClick={handleClose}
+            disabled={formik.isSubmitting}
           >
-            Отменить
+            {t('global.cancel')}
           </Button>
           <Button variant="primary" type="submit" disabled={isSubmitDisabled}>
-            Сохранить
+            {t('global.submit')}
           </Button>
         </div>
       </Form.Group>

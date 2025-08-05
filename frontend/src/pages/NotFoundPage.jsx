@@ -1,13 +1,26 @@
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 
-const NotFoundPage = () => (
-  <div className="text-center">
-    <h1 className="h4 text-muted">Страница не найдена</h1>
-    <p className="text-muted">
-      Но вы можете перейти
-      <a href="/">На главную страницу</a>
-    </p>
-  </div>
-)
+import { PAGES } from '../navigation/routes'
+import notfoundImg from '../assets/notfound.svg'
+
+const NotFoundPage = () => {
+  const { t } = useTranslation()
+
+  return (
+    <div className="text-center">
+      <img
+        className="rounded-circle mb-4"
+        src={notfoundImg}
+        alt={t('notFoundPage.pageNotFound')}
+      />
+      <h1 className="h4 text-muted">{t('notFoundPage.pageNotFound')}</h1>
+      <p className="text-muted">
+        {t('notFoundPage.butYouCanMove')}
+        <a href={PAGES.MAIN}>{t('notFoundPage.toHomePage')}</a>
+      </p>
+    </div>
+  )
+}
 
 export default NotFoundPage

@@ -1,10 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Button, Dropdown, ButtonGroup } from 'react-bootstrap'
+import { useTranslation } from 'react-i18next'
+
+import { ATTRIBUTE_REMOVABLE } from '../../features/channels/constants'
 
 const Channel = ({ channel, isCurrent, handleSelect, handleDelete, handleRename }) => {
+  const { t } = useTranslation()
   const variant = isCurrent ? 'secondary' : ''
-  const isRemovable = channel.removable
+  const isRemovable = channel[ATTRIBUTE_REMOVABLE]
 
   return (
     <li className="nav-item w-100">
@@ -15,7 +19,7 @@ const Channel = ({ channel, isCurrent, handleSelect, handleDelete, handleRename 
                 type="button"
                 variant={variant}
                 onClick={handleSelect}
-                className="w-100 rounded-0 text-start btn text-truncate"
+                className="w-100 rounded-0 text-start text-truncate"
               >
                 <span className="me-1">#</span>
                 {channel.name}
@@ -25,11 +29,11 @@ const Channel = ({ channel, isCurrent, handleSelect, handleDelete, handleRename 
                 className="flex-grow-0 rounded-0"
                 variant={variant}
               >
-                <span className="visually-hidden">Управление каналом</span>
+                <span className="visually-hidden">{t('channels.channelControl')}</span>
               </Dropdown.Toggle>
               <Dropdown.Menu>
-                <Dropdown.Item onClick={handleDelete}>Удалить</Dropdown.Item>
-                <Dropdown.Item onClick={handleRename}>Переименовать</Dropdown.Item>
+                <Dropdown.Item onClick={handleDelete}>{t('channels.delete')}</Dropdown.Item>
+                <Dropdown.Item onClick={handleRename}>{t('channels.rename')}</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           )

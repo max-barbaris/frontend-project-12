@@ -2,16 +2,17 @@ import React, { useRef, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useFormik } from 'formik'
 import { Button, Form } from 'react-bootstrap'
-import { selectChannelsNames, useUpdateChannel } from '../../features/channels/channelsApi'
-import * as yup from 'yup'
 import PropTypes from 'prop-types'
+import { useTranslation } from 'react-i18next'
 
-const initialValues = {
-  name: '',
-}
+import { selectChannelsNames, useUpdateChannel } from '../../features/channels/channelsApi'
+import { FIELD_NAME } from '../../features/channels/constants'
+import { getValidationSchema } from '../../features/channels/validation'
 
 export const RenameForm = ({ handleClose, channel }) => {
+  const { t } = useTranslation()
   const channelsNames = useSelector(selectChannelsNames)
+  const filteredChannelsNames = channelsNames.filter(name => name !== channel.name)
   const inputRef = useRef(null)
   const [renameChannel] = useUpdateChannel()
 
@@ -19,13 +20,11 @@ export const RenameForm = ({ handleClose, channel }) => {
     inputRef.current.focus()
   }, [])
 
-  const validationSchema = yup.object().shape({
-    name: yup.string().trim().required().min(3).max(20).notOneOf(channelsNames),
-  })
-
   const formik = useFormik({
-    initialValues,
-    validationSchema,
+    initialValues: {
+      [FIELD_NAME]: channel.name,
+    },
+    validationSchema: getValidationSchema(filteredChannelsNames),
     onSubmit: async (formData) => {
       await renameChannel({
         ...formData,
@@ -35,8 +34,11 @@ export const RenameForm = ({ handleClose, channel }) => {
     },
   })
 
-  const nameError = (formik.dirty && formik.errors.name) || formik.status
-  const isSubmitDisabled = !formik.dirty || nameError || formik.isSubmitting
+  const allErrors = {
+    ...formik.errors,
+    ...(formik.status && { [FIELD_NAME]: formik.status }),
+  }
+  const isSubmitDisabled = !formik.dirty || formik.isSubmitting
 
   return (
     <Form onSubmit={formik.handleSubmit}>
@@ -47,28 +49,29 @@ export const RenameForm = ({ handleClose, channel }) => {
           ref={inputRef}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          values={formik.values.name}
-          name="name"
-          id="name"
-          isInvalid={nameError}
+          value={formik.values[FIELD_NAME]}
+          name={FIELD_NAME}
+          id={FIELD_NAME}
+          isInvalid={!!allErrors[FIELD_NAME]}
         />
-        <label className="visually-hidden" htmlFor="name">
-          Название канала
+        <label className="visually-hidden" htmlFor={FIELD_NAME}>
+          {t('global.channelName')}
         </label>
         <Form.Control.Feedback type="invalid">
-          {nameError}
+          {t(`channels.renameForm.error.${allErrors[FIELD_NAME]}`)}
         </Form.Control.Feedback>
         <div className="d-flex justify-content-end">
           <Button
             className="me-2"
             variant="secondary"
             type="button"
+            disabled={formik.isSubmitting}
             onClick={handleClose}
           >
-            Отменить
+            {t('global.cancel')}
           </Button>
           <Button variant="primary" type="submit" disabled={isSubmitDisabled}>
-            Сохранить
+            {t('global.submit')}
           </Button>
         </div>
       </Form.Group>

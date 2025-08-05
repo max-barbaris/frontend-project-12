@@ -1,17 +1,29 @@
 import React from 'react'
+import { io } from 'socket.io-client'
 import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
-import App from './App'
-import messagesApi from './features/messages/messagesApi'
-import channelsApi from './features/channels/channelsApi'
-import { setCurrentChannel } from './features/channels/channelsSlice'
+import i18next from 'i18next'
+import { I18nextProvider, initReactI18next } from 'react-i18next'
+
+import resources from './locales/index'
 import store from './app/store'
-import { io } from 'socket.io-client'
+import App from './App'
+
+import { setCurrentChannel } from './features/ui/uiSlice'
+import channelsApi from './features/channels/channelsApi'
+import messagesApi from './features/messages/messagesApi'
+
 import { ModalProvider } from './components/common/Modal/ModalContext'
 import BaseModal from './components/common/Modal'
 
-const init = () => {
+const init = async () => {
   const socket = io()
+
+  const i18n = i18next.createInstance()
+  await i18n.use(initReactI18next).init({
+    resources,
+    fallbackLng: 'ru',
+  })
 
   const listenerNewChannel = (payload) => {
     store.dispatch(
@@ -75,12 +87,14 @@ const init = () => {
 
   return (
     <Provider store={store}>
-      <BrowserRouter>
-        <ModalProvider>
-          <App />
-          <BaseModal />
-        </ModalProvider>
-      </BrowserRouter>
+      <I18nextProvider>
+        <BrowserRouter>
+          <ModalProvider>
+            <App />
+            <BaseModal />
+          </ModalProvider>
+        </BrowserRouter>
+      </I18nextProvider>
     </Provider>
   )
 }

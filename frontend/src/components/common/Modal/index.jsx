@@ -1,5 +1,7 @@
 import React from 'react'
+
 import { Modal } from 'react-bootstrap'
+
 import { useModal } from './ModalContext'
 import Body from './Body'
 import Header from './Header'

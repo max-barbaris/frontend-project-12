@@ -2,54 +2,56 @@ import React, { useRef, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Form, Button, Card } from 'react-bootstrap'
 import { useFormik } from 'formik'
-import * as yup from 'yup'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+
 import { useLogin } from '../features/auth/authApi'
-import { selectError } from '../features/auth/authSlice'
-import loginImg from '../assets/login.jpg'
+import { selectAuthError, selectIsAuthError } from '../features/auth/authSlice'
+import {
+  loginInitialValues as initialValues,
+  FIELD_USERNAME,
+  FIELD_PASSWORD,
+} from '../features/auth/constants'
+import { loginValidationSchema as validationSchema } from '../features/auth/validation'
+
 import AuthForm from '../components/Auth/AuthForm'
+import loginImg from '../assets/login.jpg'
 
-const initialValues = {
-  username: '',
-  password: '',
-}
-
-const validationSchema = yup.object().shape({
-  username: yup.string().required('requiredField'),
-  password: yup.string().required('requiredField'),
-})
+import { PAGES } from '../navigation/routes'
 
 const LoginPage = () => {
-  const authError = useSelector(selectError)
+  const { t } = useTranslation()
+  const authError = useSelector(selectAuthError)
+  const isAuthError = useSelector(selectIsAuthError)
   const navigate = useNavigate()
-  const loginRef = useRef(null)
-  const [login] = useLogin()
+  const inputRef = useRef(null)
+  const [login, { isLoading }] = useLogin()
 
   useEffect(() => {
-    if (loginRef.current) {
-      loginRef.current.focus()
+    if (inputRef.current) {
+      inputRef.current.focus()
     }
   }, [])
 
   const formik = useFormik({
     initialValues,
     validationSchema,
-    onSubmit: async (values, { setErrors }) => {
+    onSubmit: async (data, { setErrors }) => {
       setErrors({})
-      await login(values).unwrap()
-      navigate('/')
+      await login(data).unwrap()
+      navigate(PAGES.MAIN)
     },
   })
 
   const allErrors = {
     ...formik.errors,
-    ...(authError && { password: authError }),
+    ...(isAuthError && { [FIELD_PASSWORD]: authError }),
   }
 
   const footer = {
-    text: 'Нет аккаунта?',
-    action: 'Регистрация',
-    href: '/signup',
+    text: t('auth.loginForm.dontHaveAccount'),
+    action: t('auth.signupForm.registration'),
+    href: PAGES.SIGNUP,
   }
 
   return (
@@ -59,28 +61,28 @@ const LoginPage = () => {
           <img
             className="rounded-circle"
             src={loginImg}
-            alt="Войти"
+            alt={t('auth.loginForm.login')}
           />
         </div>
         <Form className="login-form col-12 col-md-6 " onSubmit={formik.handleSubmit}>
-          <h1 className="text-center mb-4">Войти</h1>
+          <h1 className="text-center mb-4">{t('auth.loginForm.login')}</h1>
           <Form.Group className="form-floating mb-3">
             <Form.Control
               type="text"
               className="form-control"
-              id="username"
+              id={FIELD_USERNAME}
               onChange={formik.handleChange}
-              value={formik.values.username}
-              name="username"
-              placeholder="Ваш ник"
-              ref={loginRef}
-              isInvalid={!!allErrors.username}
+              value={formik.values[FIELD_USERNAME]}
+              name={FIELD_USERNAME}
+              placeholder={t('auth.loginForm.yourNickname')}
+              ref={inputRef}
+              isInvalid={!!allErrors[FIELD_USERNAME] || isAuthError}
               autoComplete="username"
               required
             />
-            <Form.Label htmlFor="username">Ваш ник</Form.Label>
+            <Form.Label htmlFor={FIELD_USERNAME}>{t('auth.loginForm.yourNickname')}</Form.Label>
             <Form.Control.Feedback type="invalid">
-              {allErrors.username}
+              {t(`auth.loginForm.error.${allErrors[FIELD_USERNAME]}`)}
             </Form.Control.Feedback>
           </Form.Group>
 
@@ -88,23 +90,23 @@ const LoginPage = () => {
             <Form.Control
               type="password"
               className="form-control"
-              id="password"
+              id={FIELD_PASSWORD}
               onChange={formik.handleChange}
-              value={formik.values.password}
-              name="password"
-              placeholder="Пароль"
+              value={formik.values[FIELD_PASSWORD]}
+              name={FIELD_PASSWORD}
+              placeholder={t('auth.loginForm.password')}
               autoComplete="current-password"
-              isInvalid={!!allErrors.password}
+              isInvalid={!!allErrors[FIELD_PASSWORD] || isAuthError}
               required
             />
-            <Form.Label htmlFor="password">Пароль</Form.Label>
+            <Form.Label htmlFor={FIELD_PASSWORD}>{t('auth.loginForm.password')}</Form.Label>
             <Form.Control.Feedback type="invalid">
-              {allErrors.password}
+              {t(`auth.loginForm.error.${allErrors[FIELD_PASSWORD]}`)}
             </Form.Control.Feedback>
           </Form.Group>
 
-          <Button type="submit" className="w-100 mb-3" variant="outline-primary">
-            Войти
+          <Button disabled={isLoading} type="submit" className="w-100 mb-3" variant="outline-primary">
+            {t('auth.loginForm.login')}
           </Button>
         </Form>
       </Card.Body>

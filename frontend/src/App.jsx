@@ -1,12 +1,13 @@
 import React from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+
+import Header from './components/Header.jsx'
 import LoginPage from './pages/Login'
 import Signup from './pages/SignUp.jsx'
 import MainPage from './pages/Main'
 import NotFoundPage from './pages/NotFoundPage'
-import { useSelector } from 'react-redux'
 import { selectIsAuth } from './features/auth/authSlice'
-import Header from './components/Header.jsx'
 
 const App = () => {
   const isAuth = useSelector(selectIsAuth)

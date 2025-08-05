@@ -1,15 +1,21 @@
 import { createSlice, createSelector } from '@reduxjs/toolkit'
+
 import authApi from './authApi'
 
+import { STORAGE_APP_NAME } from '../../utils/constants'
+import { clearError, extractAuthError, createErrorHandler } from '../../utils/helpers'
+
 const initialState = {
-  token: '', // JWT токен
-  username: '',
+  token: null, // JWT токен
+  username: null,
   isError: false,
   error: '',
 }
 
+const handleAuthError = createErrorHandler(extractAuthError)
+
 const loadAuthStateFromStorage = () => {
-  const storedAuthData = localStorage.getItem('hexletchat')
+  const storedAuthData = localStorage.getItem(STORAGE_APP_NAME)
 
   if (!storedAuthData) {
     return initialState
@@ -36,17 +42,12 @@ const authSlice = createSlice({
   initialState: loadAuthStateFromStorage(),
   reducers: {
     clearAuth: () => {
-      localStorage.removeItem('hexletchat')
+      localStorage.removeItem(STORAGE_APP_NAME)
       return initialState
     },
   },
   extraReducers: (builder) => {
-    builder.addMatcher(
-      authApi.endpoints.login.matchPending,
-      (state) => {
-        Object.assign(state, initialState)
-      },
-    )
+    builder.addMatcher(authApi.endpoints.login.matchPending, clearError)
     builder.addMatcher(
       authApi.endpoints.login.matchFulfilled,
       (state, { payload }) => {
@@ -56,20 +57,11 @@ const authSlice = createSlice({
           username: payload.username,
         }
         Object.assign(state, newState)
-        localStorage.setItem('hexletchat', JSON.stringify(payload))
+        localStorage.setItem(STORAGE_APP_NAME, JSON.stringify(payload))
       },
     )
-    builder.addMatcher(
-      authApi.endpoints.login.matchRejected,
-      (state, { payload }) => {
-        const newState = {
-          ...initialState,
-          isError: true,
-          error: payload?.data?.message ?? 'unknown',
-        }
-        Object.assign(state, newState)
-      },
-    )
+    builder.addMatcher(authApi.endpoints.login.matchRejected, handleAuthError)
+    builder.addMatcher(authApi.endpoints.signup.matchPending, clearError)
     builder.addMatcher(
       authApi.endpoints.signup.matchFulfilled,
       (state, { payload }) => {
@@ -79,20 +71,10 @@ const authSlice = createSlice({
           username: payload.username,
         }
         Object.assign(state, newState)
-        localStorage.setItem('hexletchat', JSON.stringify(payload))
+        localStorage.setItem(STORAGE_APP_NAME, JSON.stringify(payload))
       },
     )
-    builder.addMatcher(
-      authApi.endpoints.signup.matchRejected,
-      (state, { payload }) => {
-        const newState = {
-          ...initialState,
-          isError: true,
-          error: payload?.data?.message ?? 'unknown',
-        }
-        Object.assign(state, newState)
-      },
-    )
+    builder.addMatcher(authApi.endpoints.signup.matchRejected, handleAuthError)
   },
 })
 
@@ -108,19 +90,19 @@ export const selectUser = createSelector(
   authState => authState.username,
 )
 
-export const selectIsError = createSelector(
+export const selectIsAuthError = createSelector(
   selectAuth,
   authState => authState.isError,
 )
 
-export const selectError = createSelector(
+export const selectAuthError = createSelector(
   selectAuth,
   authState => authState.error,
 )
 
 export const selectIsAuth = createSelector(
   selectToken,
-  selectIsError,
+  selectIsAuthError,
   (token, isError) => Boolean(token) && !isError,
 )
 

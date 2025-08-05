@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { createSelector } from '@reduxjs/toolkit'
-import { selectCurrentChannelId } from './channelsSlice'
+import { selectCurrentChannelId } from '../ui/uiSelectors'
 
 const channelsApi = createApi({
   reducerPath: 'channelsApi',

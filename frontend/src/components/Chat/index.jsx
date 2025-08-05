@@ -1,10 +1,11 @@
 import React, { useRef, useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import ChatHeader from './ChatHeader'
 import Message from './Message'
 import MessageForm from './MessageForm'
-import { useSelector } from 'react-redux'
 import { selectCurrentChannel } from '../../features/channels/channelsApi'
 import { selectCurrentMessages } from '../../features/messages/messagesApi'
+import { SCROLL_TYPE } from '../../features/messages/constants'
 
 const Chat = () => {
   const channel = useSelector(selectCurrentChannel)
@@ -15,7 +16,7 @@ const Chat = () => {
     if (pageRef.current) {
       pageRef.current.scrollTo({
         top: pageRef.current.scrollHeight,
-        behavior: 'smooth',
+        behavior: SCROLL_TYPE,
       })
     }
   }, [channel, messages.length])

@@ -3,59 +3,49 @@ import { useSelector } from 'react-redux'
 import { Form, Button, Spinner, Card } from 'react-bootstrap'
 import { useFormik } from 'formik'
 import { useNavigate } from 'react-router-dom'
-import { useSignup } from '../features/auth/authApi'
-import { selectError } from '../features/auth/authSlice'
-import signupImg from '../assets/signup.jpg'
-import AuthForm from '../components/Auth/AuthForm'
-import * as yup from 'yup'
+import { useTranslation } from 'react-i18next'
 
-const initialValues = {
-  username: '',
-  password: '',
-  confirmPassword: '',
-}
+import signupImg from '../assets/signup.jpg'
+
+import AuthForm from '../components/Auth/AuthForm'
+
+import { useSignup } from '../features/auth/authApi'
+import { selectAuthError, selectIsAuthError } from '../features/auth/authSlice'
+import {
+  signupInitialValues as initialValues,
+  FIELD_USERNAME,
+  FIELD_PASSWORD,
+  FIELD_CONFIRM_PASSWORD,
+} from '../features/auth/constants'
+import { signupValidationSchema as validationSchema } from '../features/auth/validation'
+
+import { PAGES } from '../navigation/routes'
 
 const Signup = () => {
-  const authError = useSelector(selectError)
+  const { t } = useTranslation()
+  const authError = useSelector(selectAuthError)
+  const isAuthError = useSelector(selectIsAuthError)
   const navigate = useNavigate()
   const [signup, { isLoading }] = useSignup()
   const inputRef = useRef(null)
-
-  const validationSchema = yup.object().shape({
-    username: yup
-      .string()
-      .trim()
-      .required('requiredField')
-      .min(3, 'usernameLength')
-      .max(20, 'usernameLength'),
-    password: yup
-      .string()
-      .trim()
-      .required('requiredField')
-      .min(6, 'passwordLength'),
-    confirmPassword: yup
-      .string()
-      .required('requiredField')
-      .oneOf([yup.ref('password'), null], 'passwordsMustMatch'),
-  })
 
   useEffect(() => {
     inputRef.current.focus()
   }, [])
 
-  const { handleSubmit, handleChange, values, errors } = useFormik({
+  const formik = useFormik({
     initialValues,
     validationSchema,
     onSubmit: async (values, { setErrors }) => {
       setErrors({})
       await signup(values).unwrap()
-      navigate('/')
+      navigate(PAGES.MAIN)
     },
   })
 
   const allErrors = {
-    ...errors,
-    confirmPassword: errors.confirmPassword || authError,
+    ...formik.errors,
+    ...(isAuthError && { [FIELD_CONFIRM_PASSWORD]: authError }),
   }
 
   return (
@@ -65,70 +55,84 @@ const Signup = () => {
           <img
             className="rounded-circle"
             src={signupImg}
-            alt="Регистрация"
+            alt={t('auth.signupForm.registration')}
           />
         </div>
-        <Form className="w-50" onSubmit={handleSubmit}>
-          <h1 className="text-center mb-4">Регистрация</h1>
+        <Form className="w-50" onSubmit={formik.handleSubmit}>
+          <h1 className="text-center mb-4">{t('auth.signupForm.registration')}</h1>
           <Form.Group className="form-floating mb-3">
             <Form.Control
               className="form-control"
-              name="username"
-              id="username"
-              onChange={handleChange}
-              value={values.username}
+              name={FIELD_USERNAME}
+              id={FIELD_USERNAME}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values[FIELD_USERNAME]}
               autoComplete="username"
-              placeholder="Ваш ник"
+              placeholder={t('auth.signupForm.yourNickname')}
               ref={inputRef}
-              isInvalid={!!allErrors.username}
+              isInvalid={!!(formik.touched[FIELD_USERNAME] && allErrors[FIELD_USERNAME])}
             />
-            <Form.Label htmlFor="username">Ваш ник</Form.Label>
-            <Form.Control.Feedback type="invalid">
-              {allErrors.username}
-            </Form.Control.Feedback>
+            <Form.Label htmlFor={FIELD_USERNAME}>
+              {t('auth.signupForm.yourNickname')}
+            </Form.Label>
+            {formik.touched[FIELD_USERNAME] && allErrors[FIELD_USERNAME] && (
+              <Form.Control.Feedback type="invalid">
+                {t(`auth.signupForm.error.${allErrors[FIELD_USERNAME]}`)}
+              </Form.Control.Feedback>
+            )}
           </Form.Group>
           <Form.Group className="form-floating mb-3">
             <Form.Control
               className="form-control"
-              name="password"
-              id="password"
+              name={FIELD_PASSWORD}
+              id={FIELD_PASSWORD}
               type="password"
-              onChange={handleChange}
-              value={values.password}
-              autoComplete="current-pasword"
-              placeholder="Пароль"
-              isInvalid={!!allErrors.password}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values[FIELD_PASSWORD]}
+              autoComplete="current-password"
+              placeholder={t('auth.signupForm.password')}
+              isInvalid={!!(formik.touched[FIELD_PASSWORD] && allErrors[FIELD_PASSWORD])}
             />
-            <Form.Label htmlFor="password">Пароль</Form.Label>
-            <Form.Control.Feedback type="invalid">
-              {allErrors.password}
-            </Form.Control.Feedback>
+            <Form.Label htmlFor={FIELD_PASSWORD}>
+              {t('auth.signupForm.password')}
+            </Form.Label>
+            {formik.touched[FIELD_PASSWORD] && allErrors[FIELD_PASSWORD] && (
+              <Form.Control.Feedback type="invalid">
+                {t(`auth.signupForm.error.${allErrors[FIELD_PASSWORD]}`)}
+              </Form.Control.Feedback>
+            )}
           </Form.Group>
           <Form.Group className="form-floating mb-4">
             <Form.Control
               className="form-control"
-              name="confirmPassword"
-              id="confirmPassword"
+              name={FIELD_CONFIRM_PASSWORD}
+              id={FIELD_CONFIRM_PASSWORD}
               type="password"
-              onChange={handleChange}
-              value={values.confirmPassword}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values[FIELD_CONFIRM_PASSWORD]}
               autoComplete="current-password"
-              placeholder="Пароль"
-              isInvalid={!!allErrors.confirmPassword}
+              placeholder={t('auth.signupForm.confirmPassword')}
+              isInvalid={!!(formik.touched[FIELD_CONFIRM_PASSWORD] && allErrors[FIELD_CONFIRM_PASSWORD])}
             />
-            <Form.Label htmlFor="confirmPassword">Пароль</Form.Label>
-            <Form.Control.Feedback type="invalid">
-              {allErrors.confirmPassword}
-            </Form.Control.Feedback>
+            <Form.Label htmlFor={FIELD_CONFIRM_PASSWORD}>
+              {t('auth.signupForm.confirmPassword')}
+            </Form.Label>
+            {formik.touched[FIELD_CONFIRM_PASSWORD] && allErrors[FIELD_CONFIRM_PASSWORD] && (
+              <Form.Control.Feedback type="invalid">
+                {t(`auth.signupForm.error.${allErrors[FIELD_CONFIRM_PASSWORD]}`)}
+              </Form.Control.Feedback>
+            )}
           </Form.Group>
           <Button
             className="w-100"
-            isLoading={isLoading}
             disabled={isLoading}
             type="submit"
             variant="outline-primary"
           >
-            Зарегестрироваться
+            {t('auth.signupForm.register')}
             {isLoading && (
               <div className="position-absolute d-inline-block right-1 end-0 pe-3">
                 <Spinner

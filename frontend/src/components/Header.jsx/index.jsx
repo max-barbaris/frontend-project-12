@@ -1,10 +1,14 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { Button, Navbar, Container } from 'react-bootstrap'
+import { Button, Container, Navbar } from 'react-bootstrap'
+import { useTranslation } from 'react-i18next'
+
 import { selectIsAuth, clearAuth } from '../../features/auth/authSlice'
+import { PAGES } from '../../navigation/routes'
 
 const Header = () => {
+  const { t } = useTranslation()
   const dispatch = useDispatch()
   const isAuth = useSelector(selectIsAuth)
 
@@ -14,9 +18,11 @@ const Header = () => {
 
   return (
     <Navbar className="shadow-sm bg-white">
-      <Container className="d-flex justify-content-beetween">
-        <Navbar.Brand as={Link} to="/">Hexlet Chat</Navbar.Brand>
-        {isAuth && <Button onClick={logout}>Выйти</Button>}
+      <Container className="d-flex justify-content-between">
+        <Navbar.Brand as={Link} to={PAGES.MAIN}>
+          {t('global.hexletChat')}
+        </Navbar.Brand>
+        {isAuth && <Button onClick={logout}>{t('header.logout')}</Button>}
       </Container>
     </Navbar>
   )

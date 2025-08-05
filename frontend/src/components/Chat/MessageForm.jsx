@@ -1,28 +1,24 @@
 import React, { useEffect, useRef } from 'react'
-import { Form, InputGroup, Button } from 'react-bootstrap'
-import { ArrowRightSquare } from 'react-bootstrap-icons'
 import { useSelector } from 'react-redux'
 import { useFormik } from 'formik'
-import * as yup from 'yup'
+import { Form, InputGroup, Button } from 'react-bootstrap'
+import { ArrowRightSquare } from 'react-bootstrap-icons'
+import { useTranslation } from 'react-i18next'
+
 import { selectUser } from '../../features/auth/authSlice'
 import { selectCurrentChannel } from '../../features/channels/channelsApi'
 import { useAddMessage, useGetMessages } from '../../features/messages/messagesApi'
+import { initialValues, FIELD_MESSAGE } from '../../features/messages/constants'
+import { validationSchema } from '../../features/messages/validation'
 
-const initialValues = {
-  body: '',
-}
-
-const validationSchema = yup.object().shape({
-  body: yup.string().trim().required('requiredField'),
-})
 const MessageForm = () => {
+  const { t } = useTranslation()
   const [addMessage] = useAddMessage()
   const { refetch } = useGetMessages()
   const username = useSelector(selectUser)
   const channel = useSelector(selectCurrentChannel)
   const inputRef = useRef(null)
 
-  // При смене канала курсор ставится на поле ввода.
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus()
@@ -32,8 +28,8 @@ const MessageForm = () => {
   const formik = useFormik({
     initialValues,
     validationSchema,
-    validationOnBlur: false,
-    onSubmit: async (formData) => {
+    validateOnBlur: false,
+    onSubmit: async (formData, { resetForm }) => {
       const message = {
         body: formData.body,
         channelId: channel.id,
@@ -41,30 +37,31 @@ const MessageForm = () => {
       }
       await addMessage(message).unwrap()
       await refetch()
-      formik.resetForm()
-      formik.setSubmitting(false) // Снимаем состояние "отправки"
+      resetForm()
       inputRef.current.focus()
     },
   })
 
-  const isInvalid = !formik.dirty || !formik.isValid
+  const isSubmitDisabled = !formik.dirty || !formik.isValid || formik.isSubmitting
 
   return (
     <Form className="py-1 border rounded-2" noValidate onSubmit={formik.handleSubmit}>
-      <InputGroup hasValidation={isInvalid}>
+      <InputGroup>
         <Form.Control
           className="border-0 rounded-end-0"
           ref={inputRef}
-          name="body"
+          name={FIELD_MESSAGE}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          value={formik.values.body}
+          value={formik.values[FIELD_MESSAGE]}
           disabled={formik.isSubmitting}
-          placeholder="Введите сообщение"
+          aria-label={t('chat.newMessage')}
+          placeholder={t('chat.typeYourMessage')}
+          isInvalid={formik.touched[FIELD_MESSAGE] && !!formik.errors[FIELD_MESSAGE]}
         />
-        <Button variant="group-vertical" type="submit" disabled={isInvalid}>
+        <Button variant="group-vertical" type="submit" disabled={isSubmitDisabled}>
           <ArrowRightSquare size={20} />
-          <span className="visually-hidden">Отправить</span>
+          <span className="visually-hidden">{t('global.submit')}</span>
         </Button>
       </InputGroup>
     </Form>
