@@ -2,15 +2,19 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Button } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
+
+import LoadingButton from '../Button/LoadingButton'
 
 import { useDeleteChannel } from '../../features/channels/channelsApi'
 
 export const DeleteForm = ({ handleClose, channel }) => {
   const { t } = useTranslation()
-  const [deleteChannel] = useDeleteChannel()
+  const [deleteChannel, { isLoading }] = useDeleteChannel()
 
   const handleDelete = async () => {
     await deleteChannel(channel)
+    toast.success(t(`channels.channelDeletedSuccessfully`))
     handleClose()
   }
 
@@ -26,9 +30,14 @@ export const DeleteForm = ({ handleClose, channel }) => {
         >
           {t('global.cancel')}
         </Button>
-        <Button variant="danger" type="button" onClick={handleDelete}>
+        <LoadingButton
+          variant="danger"
+          type="button"
+          onClick={handleDelete}
+          isLoading={isLoading}
+        >
           {t('global.delete')}
-        </Button>
+        </LoadingButton>
       </div>
     </>
   )

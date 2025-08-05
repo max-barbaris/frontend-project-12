@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { Form, Button, Card } from 'react-bootstrap'
+import { Form, Card } from 'react-bootstrap'
 import { useFormik } from 'formik'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -16,6 +16,7 @@ import { loginValidationSchema as validationSchema } from '../features/auth/vali
 
 import AuthForm from '../components/Auth/AuthForm'
 import loginImg from '../assets/login.jpg'
+import LoadingButton from '../components/Button/LoadingButton'
 
 import { PAGES } from '../navigation/routes'
 
@@ -64,9 +65,9 @@ const LoginPage = () => {
             alt={t('auth.loginForm.login')}
           />
         </div>
-        <Form className="login-form col-12 col-md-6 " onSubmit={formik.handleSubmit}>
+        <Form className="col-12 col-md-6 mt-3 mt-md-6" onSubmit={formik.handleSubmit}>
           <h1 className="text-center mb-4">{t('auth.loginForm.login')}</h1>
-          <Form.Group className="form-floating mb-3">
+          <Form.Group className="form-floating mb-3 position-relative">
             <Form.Control
               type="text"
               className="form-control"
@@ -76,14 +77,12 @@ const LoginPage = () => {
               name={FIELD_USERNAME}
               placeholder={t('auth.loginForm.yourNickname')}
               ref={inputRef}
-              isInvalid={!!allErrors[FIELD_USERNAME] || isAuthError}
+              isInvalid={isAuthError}
               autoComplete="username"
-              required
             />
-            <Form.Label htmlFor={FIELD_USERNAME}>{t('auth.loginForm.yourNickname')}</Form.Label>
-            <Form.Control.Feedback type="invalid">
-              {t(`auth.loginForm.error.${allErrors[FIELD_USERNAME]}`)}
-            </Form.Control.Feedback>
+            <Form.Label htmlFor={FIELD_USERNAME}>
+              {t('auth.loginForm.yourNickname')}
+            </Form.Label>
           </Form.Group>
 
           <Form.Group className="form-floating mb-4">
@@ -96,18 +95,25 @@ const LoginPage = () => {
               name={FIELD_PASSWORD}
               placeholder={t('auth.loginForm.password')}
               autoComplete="current-password"
-              isInvalid={!!allErrors[FIELD_PASSWORD] || isAuthError}
-              required
+              isInvalid={isAuthError}
             />
             <Form.Label htmlFor={FIELD_PASSWORD}>{t('auth.loginForm.password')}</Form.Label>
-            <Form.Control.Feedback type="invalid">
-              {t(`auth.loginForm.error.${allErrors[FIELD_PASSWORD]}`)}
-            </Form.Control.Feedback>
+            {(isAuthError) && (
+              <div className="invalid-tooltip d-block">
+                {t(`auth.loginForm.error.${allErrors[FIELD_PASSWORD]}`)}
+              </div>
+            )}
           </Form.Group>
 
-          <Button disabled={isLoading} type="submit" className="w-100 mb-3" variant="outline-primary">
+          <LoadingButton
+            isLoading={isLoading}
+            disabled={isLoading}
+            type="submit"
+            className="w-100 mb-3"
+            variant="outline-primary"
+          >
             {t('auth.loginForm.login')}
-          </Button>
+          </LoadingButton>
         </Form>
       </Card.Body>
     </AuthForm>

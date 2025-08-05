@@ -6,6 +6,11 @@ const ru = {
       submit: 'Отправить',
       delete: 'Удалить',
       channelName: 'Имя канала',
+      loading: 'Загрузка',
+      errors: {
+        network: 'Ошибка сети',
+        unknown: 'Неизвестная ошибка',
+      },
     },
     auth: {
       loginForm: {
@@ -16,11 +21,10 @@ const ru = {
         error: {
           requiredField: 'Обязательное поле',
           invalidUsernameOrPassword: 'Неверные имя пользователя или пароль',
-          unknown: 'Неизвестная ошибка',
         },
       },
       signupForm: {
-        yourNickname: 'Ваш ник',
+        yourNickname: 'Имя пользователя',
         password: 'Пароль',
         confirmPassword: 'Подтвердите пароль',
         registration: 'Регистрация',
@@ -31,7 +35,6 @@ const ru = {
           passwordLength: 'От 6 символов',
           passwordsMustMatch: 'Пароли должны совпадать',
           userAlreadyExist: 'Такой пользователь уже существует',
-          unknown: 'Неизвестная ошибка',
         },
       },
     },
@@ -41,11 +44,14 @@ const ru = {
       rename: 'Переименовать',
       delete: 'Удалить',
       channelControl: 'Управление каналом',
+      channelAddedSuccessfully: 'Канал создан',
+      channelDeletedSuccessfully: 'Канал удален',
+      channelRenamedSuccessfully: 'Канал переименован',
       addForm: {
         addChannel: 'Добавить канал',
         error: {
           requiredField: 'Обязательное поле',
-          min: 'От 3 до 20 символов',
+          length: 'От 3 до 20 символов',
           mustBeUnique: 'Должно быть уникальным',
           removeLeadSpaces: 'Исключите пробелы перед названием',
         },
@@ -58,7 +64,7 @@ const ru = {
         renameChannel: 'Переименовать канал',
         error: {
           requiredField: 'Обязательное поле',
-          min: 'От 3 до 20 символов',
+          length: 'От 3 до 20 символов',
           mustBeUnique: 'Должно быть уникальным',
           removeLeadSpaces: 'Исключите пробелы перед названием',
         },
@@ -71,6 +77,11 @@ const ru = {
       messagesCount_one: 'сообщение',
       messagesCount_few: 'сообщения',
       messagesCount_many: 'сообщений',
+    },
+    notFoundPage: {
+      pageNotFound: 'Страница не найдена',
+      butYouCanMove: 'Но вы можете перейти',
+      toHomePage: 'на главную страницу',
     },
     header: {
       logout: 'Выйти',

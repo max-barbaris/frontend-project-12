@@ -4,6 +4,9 @@ import { useSelector } from 'react-redux'
 import { useFormik } from 'formik'
 import { Button, Form } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
+
+import LoadingButton from '../Button/LoadingButton'
 
 import { selectChannelsNames, useAddChannel } from '../../features/channels/channelsApi'
 import { initialValues, FIELD_NAME } from '../../features/channels/constants'
@@ -13,7 +16,7 @@ export const AddForm = ({ handleClose }) => {
   const { t } = useTranslation()
   const channelsNames = useSelector(selectChannelsNames)
   const inputRef = useRef(null)
-  const [addChannel] = useAddChannel()
+  const [addChannel, { isLoading }] = useAddChannel()
 
   useEffect(() => {
     inputRef.current.focus()
@@ -22,8 +25,11 @@ export const AddForm = ({ handleClose }) => {
   const formik = useFormik({
     initialValues,
     validationSchema: getValidationSchema(channelsNames),
+    validateOnBlur: false,
+    validateOnChange: false,
     onSubmit: async (formData) => {
       await addChannel(formData)
+      toast.success(t('channels.channelAddedSuccessfully'))
       handleClose()
     },
   })
@@ -51,7 +57,7 @@ export const AddForm = ({ handleClose }) => {
         <label className="visually-hidden" htmlFor={FIELD_NAME}>
           {t('global.channelName')}
         </label>
-        {formik.touched[FIELD_NAME] && allErrors[FIELD_NAME] && (
+        {allErrors[FIELD_NAME] && (
           <Form.Control.Feedback type="invalid">
             {t(`channels.addForm.error.${allErrors[FIELD_NAME]}`)}
           </Form.Control.Feedback>
@@ -66,9 +72,14 @@ export const AddForm = ({ handleClose }) => {
           >
             {t('global.cancel')}
           </Button>
-          <Button variant="primary" type="submit" disabled={isSubmitDisabled}>
+          <LoadingButton
+            type="submit"
+            variant="primary"
+            isLoading={isLoading}
+            disabled={isSubmitDisabled}
+          >
             {t('global.submit')}
-          </Button>
+          </LoadingButton>
         </div>
       </Form.Group>
     </Form>

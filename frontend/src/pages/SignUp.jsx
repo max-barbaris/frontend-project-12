@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { Form, Button, Spinner, Card } from 'react-bootstrap'
+import { Form, Card } from 'react-bootstrap'
 import { useFormik } from 'formik'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next'
 import signupImg from '../assets/signup.jpg'
 
 import AuthForm from '../components/Auth/AuthForm'
+import LoadingButton from '../components/Button/LoadingButton'
 
 import { useSignup } from '../features/auth/authApi'
 import { selectAuthError, selectIsAuthError } from '../features/auth/authSlice'
@@ -77,9 +78,9 @@ const Signup = () => {
               {t('auth.signupForm.yourNickname')}
             </Form.Label>
             {formik.touched[FIELD_USERNAME] && allErrors[FIELD_USERNAME] && (
-              <Form.Control.Feedback type="invalid">
+              <div className="invalid-tooltip d-block">
                 {t(`auth.signupForm.error.${allErrors[FIELD_USERNAME]}`)}
-              </Form.Control.Feedback>
+              </div>
             )}
           </Form.Group>
           <Form.Group className="form-floating mb-3">
@@ -99,9 +100,9 @@ const Signup = () => {
               {t('auth.signupForm.password')}
             </Form.Label>
             {formik.touched[FIELD_PASSWORD] && allErrors[FIELD_PASSWORD] && (
-              <Form.Control.Feedback type="invalid">
+              <div className="invalid-tooltip d-block">
                 {t(`auth.signupForm.error.${allErrors[FIELD_PASSWORD]}`)}
-              </Form.Control.Feedback>
+              </div>
             )}
           </Form.Group>
           <Form.Group className="form-floating mb-4">
@@ -115,36 +116,31 @@ const Signup = () => {
               value={formik.values[FIELD_CONFIRM_PASSWORD]}
               autoComplete="current-password"
               placeholder={t('auth.signupForm.confirmPassword')}
-              isInvalid={!!(formik.touched[FIELD_CONFIRM_PASSWORD] && allErrors[FIELD_CONFIRM_PASSWORD])}
+              isInvalid={
+                (formik.touched[FIELD_CONFIRM_PASSWORD]
+                  && allErrors[FIELD_CONFIRM_PASSWORD] === 'passwordsMustMatch')
+              }
             />
             <Form.Label htmlFor={FIELD_CONFIRM_PASSWORD}>
               {t('auth.signupForm.confirmPassword')}
             </Form.Label>
-            {formik.touched[FIELD_CONFIRM_PASSWORD] && allErrors[FIELD_CONFIRM_PASSWORD] && (
-              <Form.Control.Feedback type="invalid">
-                {t(`auth.signupForm.error.${allErrors[FIELD_CONFIRM_PASSWORD]}`)}
-              </Form.Control.Feedback>
-            )}
+            {formik.touched[FIELD_CONFIRM_PASSWORD]
+              && allErrors[FIELD_CONFIRM_PASSWORD] === 'passwordsMustMatch'
+              && (
+                <div className="invalid-tooltip d-block">
+                  {t(`auth.signupForm.error.${allErrors[FIELD_CONFIRM_PASSWORD]}`)}
+                </div>
+              )}
           </Form.Group>
-          <Button
-            className="w-100"
+          <LoadingButton
+            isLoading={isLoading}
             disabled={isLoading}
             type="submit"
+            className="w-100"
             variant="outline-primary"
           >
             {t('auth.signupForm.register')}
-            {isLoading && (
-              <div className="position-absolute d-inline-block right-1 end-0 pe-3">
-                <Spinner
-                  as="span"
-                  animation="grow"
-                  size="sm"
-                  role="status"
-                  aria-hidden="true"
-                />
-              </div>
-            )}
-          </Button>
+          </LoadingButton>
         </Form>
       </Card.Body>
     </AuthForm>

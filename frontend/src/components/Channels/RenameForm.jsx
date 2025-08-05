@@ -4,6 +4,9 @@ import { useFormik } from 'formik'
 import { Button, Form } from 'react-bootstrap'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
+
+import LoadingButton from '../Button/LoadingButton'
 
 import { selectChannelsNames, useUpdateChannel } from '../../features/channels/channelsApi'
 import { FIELD_NAME } from '../../features/channels/constants'
@@ -14,7 +17,7 @@ export const RenameForm = ({ handleClose, channel }) => {
   const channelsNames = useSelector(selectChannelsNames)
   const filteredChannelsNames = channelsNames.filter(name => name !== channel.name)
   const inputRef = useRef(null)
-  const [renameChannel] = useUpdateChannel()
+  const [renameChannel, { isLoading }] = useUpdateChannel()
 
   useEffect(() => {
     inputRef.current.focus()
@@ -25,11 +28,14 @@ export const RenameForm = ({ handleClose, channel }) => {
       [FIELD_NAME]: channel.name,
     },
     validationSchema: getValidationSchema(filteredChannelsNames),
+    validateOnBlur: false,
+    validateOnChange: false,
     onSubmit: async (formData) => {
       await renameChannel({
         ...formData,
         id: channel.id,
       })
+      toast.success(t(`channels.channelRenamedSuccessfully`))
       handleClose()
     },
   })
@@ -52,14 +58,16 @@ export const RenameForm = ({ handleClose, channel }) => {
           value={formik.values[FIELD_NAME]}
           name={FIELD_NAME}
           id={FIELD_NAME}
-          isInvalid={!!allErrors[FIELD_NAME]}
+          isInvalid={allErrors[FIELD_NAME]}
         />
         <label className="visually-hidden" htmlFor={FIELD_NAME}>
           {t('global.channelName')}
         </label>
-        <Form.Control.Feedback type="invalid">
-          {t(`channels.renameForm.error.${allErrors[FIELD_NAME]}`)}
-        </Form.Control.Feedback>
+        {allErrors[FIELD_NAME] && (
+          <Form.Control.Feedback type="invalid">
+            {t(`channels.renameForm.error.${allErrors[FIELD_NAME]}`)}
+          </Form.Control.Feedback>
+        )}
         <div className="d-flex justify-content-end">
           <Button
             className="me-2"
@@ -70,9 +78,14 @@ export const RenameForm = ({ handleClose, channel }) => {
           >
             {t('global.cancel')}
           </Button>
-          <Button variant="primary" type="submit" disabled={isSubmitDisabled}>
+          <LoadingButton
+            type="submit"
+            variant="primary"
+            isLoading={isLoading}
+            disabled={isSubmitDisabled}
+          >
             {t('global.submit')}
-          </Button>
+          </LoadingButton>
         </div>
       </Form.Group>
     </Form>

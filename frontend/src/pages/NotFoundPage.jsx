@@ -10,7 +10,7 @@ const NotFoundPage = () => {
   return (
     <div className="text-center">
       <img
-        className="rounded-circle mb-4"
+        className="img-fluid h-25"
         src={notfoundImg}
         alt={t('notFoundPage.pageNotFound')}
       />
