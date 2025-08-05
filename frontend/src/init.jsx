@@ -5,10 +5,12 @@ import { BrowserRouter } from 'react-router-dom'
 import i18next from 'i18next'
 import { I18nextProvider, initReactI18next } from 'react-i18next'
 import leoProfanity from 'leo-profanity'
+import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react'
 
 import resources from './locales/index'
 import store from './app/store'
 import App from './App'
+import rollbarConfig from './configs/rollbarConfig'
 
 import { setCurrentChannel } from './features/ui/uiSlice'
 import channelsApi from './features/channels/channelsApi'
@@ -91,12 +93,16 @@ const init = async () => {
   return (
     <Provider store={store}>
       <I18nextProvider>
-        <BrowserRouter>
-          <ModalProvider>
-            <App />
-            <BaseModal />
-          </ModalProvider>
-        </BrowserRouter>
+        <RollbarProvider config={rollbarConfig}>
+          <ErrorBoundary>
+            <BrowserRouter>
+              <ModalProvider>
+                <App />
+                <BaseModal />
+              </ModalProvider>
+            </BrowserRouter>
+          </ErrorBoundary>
+        </RollbarProvider>
       </I18nextProvider>
     </Provider>
   )
