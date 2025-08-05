@@ -93,16 +93,16 @@ const init = async () => {
   return (
     <Provider store={store}>
       <I18nextProvider>
-        <RollbarProvider config={rollbarConfig}>
-          <ErrorBoundary>
-            <BrowserRouter>
+        <BrowserRouter>
+          <RollbarProvider config={rollbarConfig}>
+            <ErrorBoundary>
               <ModalProvider>
                 <App />
                 <BaseModal />
               </ModalProvider>
-            </BrowserRouter>
-          </ErrorBoundary>
-        </RollbarProvider>
+            </ErrorBoundary>
+          </RollbarProvider>
+        </BrowserRouter>
       </I18nextProvider>
     </Provider>
   )
