@@ -22,7 +22,8 @@ import BaseModal from './components/common/Modal'
 const init = async () => {
   const socket = io()
 
-  leoProfanity.loadDictionary('ru')
+  leoProfanity.loadDictionary()
+  leoProfanity.add(leoProfanity.getDictionary('ru'))
 
   const i18n = i18next.createInstance()
   await i18n.use(initReactI18next).init({
