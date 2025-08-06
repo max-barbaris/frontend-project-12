@@ -5,7 +5,7 @@ start-frontend:
 	make -C frontend start
 
 start-backend:
-	npm start
+	npx start-server -s ./frontend/dist
 
 start:
 	make start-backend
@@ -16,3 +16,6 @@ develop:
 build:
 	rm -rf frontend/dist
 	npm run build
+
+run:
+	make start-backend & make start-frontend

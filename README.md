@@ -47,27 +47,15 @@ Hexlet Chat — это приложение для обмена сообщени
   ```
 
 3. **Запуск приложения в режиме разработки:**
+  ```bash
+  make develop
+  ```
 
-    Запуск бэкенда (из корневой директории):
-      ```bash
-      npm run server
-      ```
-
-    Запуск фронтенда (из директории frontend):
-      ```bash
-      cd frontend
-      npm run dev
-      ```
-
-    Или запустите сервер и фронтенд одновременно:
-      ```bash
-      make develop
-      ```
 4. **Запуск приложения в продакшене:**
-    ```bash
-    make build
-    make start
-    ```
+  ```bash
+  make build
+  make start
+  ```
 
 ## Деплой:
 
