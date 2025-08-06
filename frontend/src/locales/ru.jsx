@@ -45,7 +45,7 @@ const ru = {
       delete: 'Удалить',
       channelControl: 'Управление каналом',
       channelAddedSuccessfully: 'Канал создан',
-      channelDeletedSuccessfully: 'Канал удален',
+      channelDeletedSuccessfully: 'Канал удалён',
       channelRenamedSuccessfully: 'Канал переименован',
       addForm: {
         addChannel: 'Добавить канал',
