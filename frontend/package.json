@@ -7,7 +7,7 @@
     "dev": "vite",
     "start": "npx start-server -s ./dist",
     "build": "vite build",
-    "serve": "vite preview"
+    "server": "vite preview"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.8.2",
