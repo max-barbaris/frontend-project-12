@@ -32,7 +32,7 @@ const ru = {
         error: {
           requiredField: 'Обязательное поле',
           usernameLength: 'От 3 до 20 символов',
-          passwordLength: 'От 6 символов',
+          passwordLength: 'Не менее 6 символов',
           passwordsMustMatch: 'Пароли должны совпадать',
           userAlreadyExist: 'Такой пользователь уже существует',
         },

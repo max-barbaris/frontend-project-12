@@ -118,14 +118,14 @@ const Signup = () => {
               placeholder={t('auth.signupForm.confirmPassword')}
               isInvalid={
                 (formik.touched[FIELD_CONFIRM_PASSWORD]
-                  && allErrors[FIELD_CONFIRM_PASSWORD] === 'passwordsMustMatch')
+                  && allErrors[FIELD_CONFIRM_PASSWORD])
               }
             />
             <Form.Label htmlFor={FIELD_CONFIRM_PASSWORD}>
               {t('auth.signupForm.confirmPassword')}
             </Form.Label>
             {formik.touched[FIELD_CONFIRM_PASSWORD]
-              && allErrors[FIELD_CONFIRM_PASSWORD] === 'passwordsMustMatch'
+              && allErrors[FIELD_CONFIRM_PASSWORD]
               && (
                 <div className="invalid-tooltip d-block">
                   {t(`auth.signupForm.error.${allErrors[FIELD_CONFIRM_PASSWORD]}`)}
