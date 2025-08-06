@@ -11,4 +11,9 @@ export default defineConfig([
   { files: ['**/*.{js,mjs,cjs,jsx}'], languageOptions: { globals: { ...globals.browser, ...globals.node } } },
   pluginReact.configs.flat.recommended,
   stylistic.configs.recommended,
+  {
+    rules: {
+      'react/react-in-jsx-scope': 'off',
+    },
+  },
 ])

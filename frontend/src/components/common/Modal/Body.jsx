@@ -1,4 +1,3 @@
-import React from 'react'
 import { ModalBody } from 'react-bootstrap'
 import PropTypes from 'prop-types'
 

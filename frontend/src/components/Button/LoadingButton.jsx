@@ -1,4 +1,3 @@
-import React from 'react'
 import { Button, Spinner } from 'react-bootstrap'
 import classNames from 'classnames'
 import PropTypes from 'prop-types'
