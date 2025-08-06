@@ -26,7 +26,7 @@ const Channel = ({ channel, isCurrent, handleSelect, handleDelete, handleRename 
               </Button>
               <Dropdown.Toggle
                 split
-                className="flex-grow-0 rounded-0"
+                className="flex-grow-0"
                 variant={variant}
               >
                 <span className="visually-hidden">{t('channels.channelControl')}</span>

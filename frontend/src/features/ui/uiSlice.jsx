@@ -55,7 +55,7 @@ const uiSlice = createSlice({
     builder.addMatcher(
       channelsApi.endpoints.addChannel.matchFulfilled,
       (state, { payload }) => {
-        state.currentId = payload.id
+        state.currentChannelId = payload.id
         state.isError = false
         state.error = ''
       },
@@ -66,8 +66,8 @@ const uiSlice = createSlice({
       (state, { payload }) => {
         state.isError = false
         state.error = ''
-        if (state.currentId === payload.id) {
-          state.currentId = state.defaultId
+        if (state.currentChannelId === payload.id) {
+          state.currentChannelId = state.defaultChannelId
         }
       },
     )
