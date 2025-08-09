@@ -16,10 +16,12 @@ export const clearError = (state) => {
   })
 }
 
-export const createErrorHandler = extractor => (state, { payload }) => {
+export const createErrorHandler = extractor => (state, { payload, meta }) => {
   const status = payload?.status
+  const endpointName = meta?.arg?.endpointName || ''
+  const authEndpoints = ['login', 'signup']
 
-  if (status === 401) {
+  if (!authEndpoints.includes(endpointName) && status === 401) {
     clearError(state)
     state.redirectToLogin = true
     return
