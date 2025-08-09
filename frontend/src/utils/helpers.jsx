@@ -12,11 +12,19 @@ export const clearError = (state) => {
   Object.assign(state, {
     error: '',
     isError: false,
+    redirectToLogin: false,
   })
 }
 
 export const createErrorHandler = extractor => (state, { payload }) => {
   const status = payload?.status
+
+  if (status === 401) {
+    clearError(state)
+    state.redirectToLogin = true
+    return
+  }
+
   const error = extractor(status)
 
   if (!error) {
@@ -26,4 +34,5 @@ export const createErrorHandler = extractor => (state, { payload }) => {
 
   state.error = error
   state.isError = true
+  state.redirectToLogin = false
 }

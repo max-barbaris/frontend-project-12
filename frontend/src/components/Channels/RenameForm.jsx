@@ -63,6 +63,7 @@ export const RenameForm = ({ handleClose, channel }) => {
           name={FIELD_NAME}
           id={FIELD_NAME}
           isInvalid={allErrors[FIELD_NAME]}
+          autoComplete="off"
         />
         <label className="visually-hidden" htmlFor={FIELD_NAME}>
           {t('global.channelName')}

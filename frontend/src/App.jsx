@@ -1,17 +1,31 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import Header from './components/Header.jsx'
 import LoginPage from './pages/Login.jsx'
 import Signup from './pages/SignUp.jsx'
 import MainPage from './pages/Main.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
-import { selectIsAuth } from './features/auth/authSlice'
+import { resetRedirect } from './features/ui/uiSlice.jsx'
+import { selectIsAuth, clearAuth } from './features/auth/authSlice'
 import { PAGES } from './navigation/pageRoutes'
+import { selectRedirectToLogin } from './features/ui/uiSelectors.jsx'
+import { useEffect } from 'react'
 
 const App = () => {
   const isAuth = useSelector(selectIsAuth)
+  const redirectToLogin = useSelector(selectRedirectToLogin)
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+
+  useEffect (() => {
+    if (redirectToLogin) {
+      dispatch(clearAuth())
+      dispatch(resetRedirect())
+      navigate(PAGES.LOGIN)
+    }
+  }, [redirectToLogin, dispatch, navigate])
 
   return (
     <>

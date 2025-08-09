@@ -12,6 +12,7 @@ const initialState = {
   defaultChannelId: DEFAULT_CHANNEL_ID,
   error: '',
   isError: false,
+  redirectToLogin: false,
 }
 
 const handleUiError = createErrorHandler(extractUiError)
@@ -42,6 +43,9 @@ const uiSlice = createSlice({
       state.currentChannelId = payload.id
     },
     clearError,
+    resetRedirect(state) {
+      state.redirectToLogin = false
+    },
   },
   extraReducers: (builder) => {
     clearErrorEndpoints.forEach((endpoint) => {
@@ -58,6 +62,7 @@ const uiSlice = createSlice({
         state.currentChannelId = payload.id
         state.isError = false
         state.error = ''
+        state.redirectToLogin = false
       },
     )
 
@@ -66,6 +71,7 @@ const uiSlice = createSlice({
       (state, { payload }) => {
         state.isError = false
         state.error = ''
+        state.redirectToLogin = false
         if (state.currentChannelId === payload.id) {
           state.currentChannelId = state.defaultChannelId
         }
@@ -74,6 +80,6 @@ const uiSlice = createSlice({
   },
 })
 
-export const { setCurrentChannel } = uiSlice.actions
+export const { setCurrentChannel, resetRedirect } = uiSlice.actions
 
 export default uiSlice.reducer

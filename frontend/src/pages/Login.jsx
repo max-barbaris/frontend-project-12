@@ -78,7 +78,7 @@ const LoginPage = () => {
               placeholder={t('auth.loginForm.yourNickname')}
               ref={inputRef}
               isInvalid={isAuthError}
-              autoComplete="username"
+              autoComplete="off"
             />
             <Form.Label htmlFor={FIELD_USERNAME}>
               {t('auth.loginForm.yourNickname')}
@@ -94,8 +94,8 @@ const LoginPage = () => {
               value={formik.values[FIELD_PASSWORD]}
               name={FIELD_PASSWORD}
               placeholder={t('auth.loginForm.password')}
-              autoComplete="current-password"
               isInvalid={isAuthError}
+              autoComplete="off"
             />
             <Form.Label htmlFor={FIELD_PASSWORD}>{t('auth.loginForm.password')}</Form.Label>
             {(isAuthError) && (

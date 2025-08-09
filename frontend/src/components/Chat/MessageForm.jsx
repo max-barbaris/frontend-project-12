@@ -14,17 +14,11 @@ import { validationSchema } from '../../features/messages/validation'
 
 const MessageForm = () => {
   const { t } = useTranslation()
-  const [addMessage, { isSubmitting }] = useAddMessage()
+  const [addMessage, { isLoading }] = useAddMessage()
   const { refetch } = useGetMessages()
   const username = useSelector(selectUser)
   const channel = useSelector(selectCurrentChannel)
   const inputRef = useRef(null)
-
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus()
-    }
-  }, [channel, isSubmitting])
 
   const formik = useFormik({
     initialValues,
@@ -43,6 +37,12 @@ const MessageForm = () => {
     },
   })
 
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus()
+    }
+  }, [channel, formik.isSubmitting])
+
   const isSubmitDisabled = !formik.dirty || !formik.isValid || formik.isSubmitting
 
   return (
@@ -59,8 +59,9 @@ const MessageForm = () => {
           aria-label={t('chat.newMessage')}
           placeholder={t('chat.typeYourMessage')}
           isInvalid={formik.touched[FIELD_MESSAGE] && !!formik.errors[FIELD_MESSAGE]}
+          autoComplete="off"
         />
-        <Button variant="group-vertical" type="submit" disabled={isSubmitDisabled}>
+        <Button variant="group-vertical" type="submit" disabled={isSubmitDisabled || isLoading}>
           <ArrowRightSquare size={20} />
           <span className="visually-hidden">{t('global.submit')}</span>
         </Button>

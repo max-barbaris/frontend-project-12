@@ -69,10 +69,10 @@ const Signup = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values[FIELD_USERNAME]}
-              autoComplete="username"
               placeholder={t('auth.signupForm.yourNickname')}
               ref={inputRef}
               isInvalid={!!(formik.touched[FIELD_USERNAME] && allErrors[FIELD_USERNAME])}
+              autoComplete="off"
             />
             <Form.Label htmlFor={FIELD_USERNAME}>
               {t('auth.signupForm.yourNickname')}
@@ -92,9 +92,9 @@ const Signup = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values[FIELD_PASSWORD]}
-              autoComplete="current-password"
               placeholder={t('auth.signupForm.password')}
               isInvalid={!!(formik.touched[FIELD_PASSWORD] && allErrors[FIELD_PASSWORD])}
+              autoComplete="off"
             />
             <Form.Label htmlFor={FIELD_PASSWORD}>
               {t('auth.signupForm.password')}
@@ -114,12 +114,12 @@ const Signup = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values[FIELD_CONFIRM_PASSWORD]}
-              autoComplete="current-password"
               placeholder={t('auth.signupForm.confirmPassword')}
               isInvalid={
                 (formik.touched[FIELD_CONFIRM_PASSWORD]
                   && allErrors[FIELD_CONFIRM_PASSWORD])
               }
+              autoComplete="off"
             />
             <Form.Label htmlFor={FIELD_CONFIRM_PASSWORD}>
               {t('auth.signupForm.confirmPassword')}

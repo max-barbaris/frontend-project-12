@@ -21,3 +21,8 @@ export const selectUiError = createSelector(
   selectUi,
   state => state.error,
 )
+
+export const selectRedirectToLogin = createSelector(
+  selectUi,
+  state => state.redirectToLogin,
+)
