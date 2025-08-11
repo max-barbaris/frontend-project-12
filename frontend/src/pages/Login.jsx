@@ -77,12 +77,17 @@ const LoginPage = () => {
               name={FIELD_USERNAME}
               placeholder={t('auth.loginForm.yourNickname')}
               ref={inputRef}
-              isInvalid={isAuthError}
+              isInvalid={(formik.touched[FIELD_USERNAME] && !!formik.errors[FIELD_USERNAME]) || isAuthError}
               autoComplete="off"
             />
             <Form.Label htmlFor={FIELD_USERNAME}>
               {t('auth.loginForm.yourNickname')}
             </Form.Label>
+            {(formik.touched[FIELD_USERNAME] || isAuthError) && allErrors[FIELD_USERNAME] && (
+              <div className="invalid-tooltip d-block">
+                {t(`auth.loginForm.error.${allErrors[FIELD_USERNAME]}`)}
+              </div>
+            )}
           </Form.Group>
 
           <Form.Group className="form-floating mb-4">
@@ -94,11 +99,11 @@ const LoginPage = () => {
               value={formik.values[FIELD_PASSWORD]}
               name={FIELD_PASSWORD}
               placeholder={t('auth.loginForm.password')}
-              isInvalid={isAuthError}
+              isInvalid={(formik.touched[FIELD_USERNAME] && !!formik.errors[FIELD_USERNAME]) || isAuthError}
               autoComplete="off"
             />
             <Form.Label htmlFor={FIELD_PASSWORD}>{t('auth.loginForm.password')}</Form.Label>
-            {(isAuthError) && (
+            {(formik.touched[FIELD_PASSWORD] || isAuthError) && allErrors[FIELD_PASSWORD] && (
               <div className="invalid-tooltip d-block">
                 {t(`auth.loginForm.error.${allErrors[FIELD_PASSWORD]}`)}
               </div>
